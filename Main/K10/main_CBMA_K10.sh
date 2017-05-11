@@ -94,8 +94,8 @@ signLevelStud=0.05
 # Minimal cluster size for individual studies.
 minclustersizeStud=1
 # In which iteration/run are we?
-# We have run this on high performance cluster which takes 1-2 as argument.
-# Hence this is run with value 1 and 2
+# We have run this on high performance cluster which takes 1-7 as argument.
+# Hence this is run with value 1, 2, 3, 4, 5, 6, 7
 RUN=1
 
 
