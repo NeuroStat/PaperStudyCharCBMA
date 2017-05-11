@@ -31,15 +31,16 @@
 rm(list=ls())
 
 # Set working directory
-wd <- '/Users/hanbossier/Dropbox/PhD/PhDWork/Meta Analysis/R Code/Studie_FixRan/FixRanStudyGit.git/Imagen/DoubleStudies'
+wd <- 'PaperStudyCharCBMA/Main/K20'
 setwd(wd)
 
 # Set the seed
 seed <- 11121990
 set.seed(seed)
 
-# Scanning site information
-IDLOC <- '/Volumes/2_TB_WD_Elements_10B8_Han/PhD/IMAGENDATA/IMAGEN/IMAGEN/IMAGEN/OurIDs'
+# Subject ID and scanning site information:
+	# OwnID is the identifier of the subject.
+IDLOC <- '//<<RESTRICTED_ACCES>>/IDs'
 load(IDLOC)
 
 # Number of studies in the meta-analysis
@@ -65,8 +66,9 @@ WRITE <- FALSE
 # Note: this is only done one time. Then the same distribution can be used in different runs with different subjects.
 	# K studies with mean sample size of MeanDis and SD of SDDis
 	# Have to sum to groupTotal
+	# Cannot be smaller than 10 subjects per study (due to too low DOF's ==> has to be larger than 1000 for FE and ME pooling in this study)
 distr <- c()
-	while(sum(distr)!=groupTotal){
+	while(sum(distr)!=groupTotal  || any(c(1:9) %in% distr){
 		distr <- round(rnorm(NS,MeanDis,SDDis))
 	}
 
@@ -149,6 +151,15 @@ for(r in 1:NRUNS){
 # Gather in data.frame
 RefSamSubj <- data.frame('subjects' = Refsubjects, 'run' = Refrun)
 
+# If we want to check whether subjects in reference are completely separete from those in studies, then run this code
+			# If FALSE, then OK
+CHECK <- TRUE
+if(isTRUE(CHECK)){
+	for(i in 1:NRUNS){
+		print(any(RefSamSubj[RefSamSubj[,'run'] == i,'subjects'] %in% StudySamSubj[StudySamSubj[,'run'] == i,'subjects']))
+		print(any(StudySamSubj[StudySamSubj[,'run'] == i,'subjects'] %in% RefSamSubj[GTSamSubj[,'run'] == i,'subjects']))
+	}
+}
 
 ##
 ###############

@@ -23,7 +23,7 @@
 ##
 
 
-# Take arguments from master file
+# Take arguments from main_CBMA_K20.sh
 args <- commandArgs(TRUE)
 
 # Set working directory
