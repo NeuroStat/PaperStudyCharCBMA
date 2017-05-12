@@ -13,14 +13,14 @@ The analyses for Activation Likelihood Estimation were performed using MATLAB sc
 
 
 ## Analyses
-Located in [Analyses folder](https://github.com/NeuroStat/PaperStudyCharCBMA/tree/master/Analyses). 
-### Descriptive results
+Located in [Analyses folder](https://github.com/NeuroStat/PaperStudyCharCBMA/tree/master/Analyses).
+#### Descriptive results
 [DescriptiveResults.R](https://github.com/NeuroStat/PaperStudyCharCBMA/blob/master/Analyses/DescriptiveResults.R) contains the code to get the descriptive results (table 2).
-### ROC
+#### ROC
 [PlottingROC.R](https://github.com/NeuroStat/PaperStudyCharCBMA/blob/master/Analyses/PlottingROC.R) contains code to obtain all the ROC curves.
-### Overlap
+#### Overlap
 [PlottingReliability.R](https://github.com/NeuroStat/PaperStudyCharCBMA/blob/master/Analyses/PlottingReliability.R) contains code for the measures of overlap.
-### Heatmaps
+#### Heatmaps
 [Heatmaps.R](https://github.com/NeuroStat/PaperStudyCharCBMA/blob/master/Analyses/Heatmaps.R) contains the code to get the heatmap figures.
-### Between study variability
+#### Between study variability
 [BS_Var.R](https://github.com/NeuroStat/PaperStudyCharCBMA/blob/master/Analyses/BS_var.R) contains code to visualize the between study variability.
