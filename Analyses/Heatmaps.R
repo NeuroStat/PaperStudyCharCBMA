@@ -1,5 +1,5 @@
 ####################
-#### TITLE:     Calculate activation reliability of the MAs.
+#### TITLE:     Plot heatmpas to visualize activation reliability of the MAs.
 #### Contents:
 ####
 #### Source Files: //Meta\ Analyis/R\ Code/Studie_CBMA/PaperStudyCharCBMA.git/Analyses

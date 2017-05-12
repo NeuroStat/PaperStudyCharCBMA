@@ -1,5 +1,5 @@
 ####################
-#### TITLE:     Calculate activation reliability of the MAs.
+#### TITLE:     Calculate activation reliability of the MAs: plot in overlap matrix.
 #### Contents:
 ####
 #### Source Files: //Meta\ Analyis/R\ Code/Studie_CBMA/PaperStudyCharCBMA.git/Analyses
