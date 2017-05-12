@@ -33,7 +33,7 @@ WDs <- list(
 # Specific functions from cowplot package.
 # I gathered these from the cowplot Github page (https://github.com/wilkelab/cowplot).
 # This is because the full package is not bug free on my machine as of 03/01/2017.
-source('/Users/hanbossier/Dropbox/PhD/PhDWork/Meta Analysis/Studies/Studie_FixRan/Paper/GithubRepository/PaperStudyCharCBMA/Analyses/cowplot_functions.R')
+source('~/PaperStudyCharCBMA/Analyses/cowplot_functions.R')
 
 
 ##
@@ -42,16 +42,8 @@ source('/Users/hanbossier/Dropbox/PhD/PhDWork/Meta Analysis/Studies/Studie_FixRa
 ###############
 ##
 
-
-# List of K (number of studies in MA)
-WDs <- list(
-	'[1]' = "/Volumes/2_TB_WD_Elements_10B8_Han/PhD/IMAGENDATA/Data/10RunsSites/CognitiveTaskNRP_and_ALE",
-	'[2]' = "/Volumes/2_TB_WD_Elements_10B8_Han/PhD/IMAGENDATA/Data/10RunsSites/CognitiveTaskDoubleStudies",
-	'[3]' = "/Volumes/2_TB_WD_Elements_10B8_Han/PhD/IMAGENDATA/Data/10RunsSites/CognitiveTask35"
-	)
-
 # Choose your WD
-WD <- 2
+WD <- 3
 
 # Setwd
 setwd(WDs[[WD]])
@@ -121,20 +113,11 @@ OVERLAP <- function(mapA, mapB, mask, precision = 4){
 		return(round(value, precision))
 }
 
-# Function to write nifti header that will be needed for correct transformation
-WRITENIFTI <- function(target, source, dim){
-	EndNIFTI <- nifti(img = target, dim = dim,
-								datatype = 16)
-		EndNIFTI@qform_code <- source@qform_code
-		EndNIFTI@pixdim <- c(-1,3,3,3,1,1,1,1)
-	return(EndNIFTI)
-}
 
 # Number of runs.
 if(WD == 1) NRUNS <- 7
 if(WD == 2) NRUNS <- 3
 if(WD == 3) NRUNS <- 2
-
 
 # Number of studies in each meta-analysis
 if(WD == 1) NSTUD <- 10
@@ -145,7 +128,6 @@ if(WD == 3) NSTUD <- 35
 if(WD == 1) NSUBREF <- 400
 if(WD == 2) NSUBREF <- 400
 if(WD == 3) NSUBREF <- 700
-
 
 # Dimension of the data
 DIM <- c(53,63,46)
@@ -159,37 +141,15 @@ poolmeth <- c(
 numpoolmeths <- length(poolmeth)
 
 
-# Mask for thresholding the PMaps of fixed and random effects MA.
+# Mask for thresholding the PMaps of fixed and random effects MA: note that we used one universal mask throughout the entire study.
 MASK <- readNIfTI(paste(WDs[[WD]],'/Run_1/GroupAnalysis/mask.nii.gz',sep=''), verbose=FALSE, warn=-1, reorient=TRUE, call=NULL)[,,,1]
 # Mask for ALE
 MASKALE <- readNIfTI('/Users/hanbossier/Dropbox/PhD/PhDWork/Meta Analysis/R Code/Studie_FixRan/FixRanStudyGit.git/Imagen/MNI152.nii', verbose=FALSE, warn=-1, reorient=TRUE, call=NULL)[,,]
 
-# We are taking the mask of the group analysis of a specific run.
-	# This should not matter as we are using the same mask over all subjects,
-	# hence in every stage of the study.
-	# To be sure, I check this here.
-	CHECKMASK <- FALSE
-if(isTRUE(CHECKMASK)){
-	testMASK <- array(NA, dim = c(prod(DIM),7))
-	for(i in 1:NRUNS){
-		testMASK[,i] <- readNIfTI(paste('/Volumes/2_TB_WD_Elements_10B8_Han/PhD/IMAGENDATA/Data/10RunsSites/CognitiveTaskNRP_and_ALE/Run_',i,'/GroupAnalysis/mask.nii.gz', sep=''))[,,,i]
-	}
-		# Dimension and head
-		dim(testMASK)
-		head(testMASK)
-		# We expect only 0 and 1 values in the masks
-		table(testMASK)
-		# If we sum rowwise, we only expect 0 and NRUNS
-		table(apply(testMASK, 1, sum))
-}else{
-	print("NOT CHECKING MASK!")
-}
-
-
-# Labels to be used in paper for group level models
+# Labels for group level models
 ArtPOOLlabels <- c('OLS', 'Fixed Effects', 'Mixed Effects')
 
-# Labels to be used in paper for meta-analyses
+# Labels for meta-analyses
 ArtLABMA <- c('Fixed Effects MA', 'Random Effects MA','ALE cFWE','ALE Uncorrected')
 
 # Array of meta-analysis methods
@@ -212,7 +172,7 @@ NPAIRS <- dim(PAIRS)[1]
 
 ##
 ###############
-### Calculate overlap: K = 10
+### Calculate overlap
 ###############
 ##
 
@@ -374,9 +334,9 @@ CORRM$pooling <- factor(CORRM$pooling, levels = sort(poolmeth), labels = sort(Ar
 CORRM$MA <- factor(CORRM$MA, levels = sort(metaMethods), labels = sort(ArtLABMA))
 
 
-
-# Colour set
+# Colour set: choose one!
 col1 <- c('#08589e', '#7bccc4', '#ccebc5' )
+col1 <- c('#7fc97f','#beaed4','#fdc086')
 OverlapFigNumber <- c(9,"10A","10B")
 
 # Overlap heatmap
@@ -385,7 +345,7 @@ quartz(height = 6.5, width = 6.5,
 ggplot(data = CORRM, aes(Var2, Var1, fill = value))+
 geom_tile(color = "white") +
 facet_grid(pooling ~ MA) +
-geom_text(aes(label = str_replace(as.character(round(value,2)), "^0\\.", ".")), colour = "white", size = 2.5) +
+geom_text(aes(label = str_replace(as.character(round(value,2)), "^0\\.", ".")), colour = "white", size = ifelse(WD == 1,2.5,4)) +
 scale_fill_gradient2(low = col1[1], mid = col1[2], high = col1[3],
   midpoint = 0.5, limit = c(0,1), space = "Lab",
   name="Overlap\nCoefficient") +
@@ -405,46 +365,6 @@ theme(axis.text.x = element_text(angle = 0, vjust = 1,
 	 panel.border = element_blank())+
 coord_fixed()
 dev.off()
-
-
-
-
-############################################################################################################################################
-############################################################################################################################################
-
-# Want to plot K = 20 and 35 on one page.
-# To do this, we first need to run the following code for K = 20 and 35.
-# Then grob the data, save it and load it again.
-
-if(WD > 1){
-	PlotGrob <-	ggplot(data = CORRM, aes(Var2, Var1, fill = value))+
-	geom_tile(color = "white") +
-	facet_grid(pooling ~ MA) +
-	geom_text(aes(label = str_replace(as.character(round(value,2)), "^0\\.", ".")), colour = "white", size = 2.5) +
-	scale_fill_gradient2(low = col1[1], mid = col1[2], high = col1[3],
-	  midpoint = 0.5, limit = c(0,1), space = "Lab",
-	  name="Overlap\nCoefficient") +
-		scale_x_discrete(name=paste("ITERATION (K = ", NSTUD, ")", sep=""),
-				labels = 1:NRUNS) +
-	     scale_y_discrete(name="ITERATION",
-			 	labels = 1:NRUNS) +
-	 theme_minimal() +
-	theme(axis.text.x = element_text(angle = 0, vjust = 1,
-	   		size = 10, hjust = 1),
-	   legend.box.margin = margin(0, 10, 0, 10),
-		 legend.position = 'top',
-		 legend.justification = "left",
-		 legend.title = element_text(size = 8.5),
-		 legend.text.align = 0.40,
-		 plot.margin = unit(c(0,0,0,0), 'mm'),
-		 panel.border = element_blank())+
-	coord_fixed()
-
-	g_out = ggplotGrob(PlotGrob)
-	save(g_out,	file = paste(LocFileSave, '/PlotGrob_K', NSTUD, sep = ''))
-}
-
-
 
 
 
