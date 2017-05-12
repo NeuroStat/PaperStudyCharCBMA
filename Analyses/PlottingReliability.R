@@ -43,7 +43,7 @@ source('~/PaperStudyCharCBMA/Analyses/cowplot_functions.R')
 ##
 
 # Choose your WD
-WD <- 3
+WD <- 1
 
 # Setwd
 setwd(WDs[[WD]])
