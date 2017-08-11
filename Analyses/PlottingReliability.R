@@ -43,7 +43,7 @@ source('~/PaperStudyCharCBMA/Analyses/cowplot_functions.R')
 ##
 
 # Choose your WD
-WD <- 1
+WD <- 3
 
 # Setwd
 setwd(WDs[[WD]])
@@ -335,13 +335,13 @@ CORRM$MA <- factor(CORRM$MA, levels = sort(metaMethods), labels = sort(ArtLABMA)
 
 
 # Colour set: choose one!
-col1 <- c('#08589e', '#7bccc4', '#ccebc5' )
 col1 <- c('#7fc97f','#beaed4','#fdc086')
+col1 <- c('#08589e', '#7bccc4', '#ccebc5')
 OverlapFigNumber <- c(9,"10A","10B")
 
 # Overlap heatmap
 quartz(height = 6.5, width = 6.5,
-	type = 'tif', file = paste(LocFileSave, '/figure',OverlapFigNumber[WD],'_overlap_K',NSTUD,'.tif', sep = ''), bg = 'white', canvas = 'white')
+	type = 'png', file = paste(LocFileSave, '/figure',OverlapFigNumber[WD],'_overlap_K',NSTUD,'.png', sep = ''), bg = 'white', canvas = 'white', dpi = 600)
 ggplot(data = CORRM, aes(Var2, Var1, fill = value))+
 geom_tile(color = "white") +
 facet_grid(pooling ~ MA) +
