@@ -1,6 +1,10 @@
 Analyses
 ===========
 
+#### Intermediate results
+
+Raw data is processed and saved in *.rds* objects. This is done in the [IntermediateResults folder]().
+
 #### Descriptive results
 [DescriptiveResults.R](https://github.com/NeuroStat/PaperStudyCharCBMA/blob/master/Analyses/DescriptiveResults.R) contains the code to get the descriptive results (table 2).
 #### ROC
