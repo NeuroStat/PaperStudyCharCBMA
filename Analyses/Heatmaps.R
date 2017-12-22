@@ -42,8 +42,8 @@ source('~/PaperStudyCharCBMA/Analyses/cowplot_functions.R')
 ###############
 ##
 
-# Choose your WD
-WD <- 1
+# Choose your WD (in paper: 1, 6 and 8)
+WD <- 8
 
 # Setwd
 setwd(WDs[[WD]])
@@ -91,21 +91,22 @@ ThreshPVal <- function(PMAP, threshold, mask){
 	return(PMAP.thresholded)
 }
 
-# Number of runs.
-if(WD == 1) NRUNS <- 7
-if(WD == 2) NRUNS <- 3
-if(WD == 3) NRUNS <- 2
-
-
-# Number of studies in each meta-analysis
-if(WD == 1) NSTUD <- 10
-if(WD == 2) NSTUD <- 20
-if(WD == 3) NSTUD <- 35
-
-# Number of subjects in the reference image
-if(WD == 1) NSUBREF <- 400
-if(WD == 2) NSUBREF <- 400
-if(WD == 3) NSUBREF <- 700
+# Data frame with:
+# -- WDs correspond to working directories (see ProcesRawData for this)
+# -- number of runs/folds
+# -- number of studies in the MA (K) and 
+# -- number of subjects in the reference image.
+DesignInfo <- data.frame(WDs = 1:8,
+                         FOLDS = c(7, 5, 5, 4, 3, 3, 2, 2),
+                         K = c(10, 12, 14, 16, 18, 20, 30, 35),
+                         NSUBREF = c(200, 240, 280, 320, 360, 400, 600, 700))
+print(DesignInfo)
+NRUNS <- DesignInfo %>% filter(WDs == WD) %>% select(FOLDS) %>% 
+  unlist() %>% as.numeric()
+NSTUD <- DesignInfo %>% filter(WDs == WD) %>% select(K) %>% 
+  unlist() %>% as.numeric()
+NSUBREF <- DesignInfo %>% filter(WDs == WD) %>% select(NSUBREF) %>% 
+  unlist() %>% as.numeric()
 
 
 # Dimension of the data
@@ -341,7 +342,7 @@ REGIONS <- list(
 	'Caudate' = 'Caudate',
 	'PTS' = 'PTS'
 	)
-REGION <- REGIONS[['Caudate']]
+REGION <- REGIONS[['PTS']]
 
 # Selection of Z coordinate
 if(REGION == 'Caudate'){
@@ -360,7 +361,7 @@ GridSlices <- ggplot(ToPlotORHGroupMaps, aes(x = x, y = y)) + geom_tile(aes(fill
 	scale_fill_gradient(limits = c(0, max(MNIPlot)), low = 'black', high='white', guide = FALSE) +
 	geom_point(aes(x = x, y = y, colour = SummedVoxels, alpha = alpha), shape = 15, size = 0.75, na.rm = TRUE) +
 	facet_wrap(Pooling ~ MA, scales = 'free') +
-	scale_colour_manual(values = c(brewer.pal(name="Set1", n = NRUNS)), name = paste("Declared significant out of ",NRUNS," iterations: ", sep = ""), breaks =c(1:NRUNS)) +
+	scale_colour_manual(values = c(brewer.pal(name="Set1", n = NRUNS)), name = paste("Declared significant out of ",NRUNS," FOLDS: ", sep = ""), breaks =c(1:NRUNS)) +
 	scale_alpha(guide = 'none') + theme_void() +
 	theme(legend.position = 'top', legend.text = element_text(size=9)) +
 	guides(colour = guide_legend(title.position="top", title.hjust = 0.5, nrow = 1, override.aes = list(size = 4)))
@@ -450,7 +451,7 @@ bottom_row <- plot_grid(RefImageHeat,  RefImageES, labels = c('B', 'C'), align =
 
 quartz(width = 5.825243, height = 9.572815)
 plot_grid(GridSlices, bottom_row, labels = c('A',''), ncol = 1, rel_heights = c(1,0.3), rel_widths = c(1,1))
-ggsave(paste('/overlap_plots/heatmap_no_transform_',REGION,'_ES_I_',NRUNS,'.png', sep = ''), plot = last_plot())
+ggsave(paste(getwd(), '/overlap_plots/heatmap_no_transform_',REGION,'_ES_I_',NRUNS,'.png', sep = ''), plot = last_plot())
 
 # I used dev.size() after manually resizing the plot window to get the width and height
 dev.size()
