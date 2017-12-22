@@ -3,7 +3,7 @@ Analyses
 
 #### Intermediate results
 
-Raw data is processed and saved in *.rds* objects. This is done in the [IntermediateResults folder]().
+Raw data is processed and saved in *.rds* objects. This is done in the [IntermediateResults folder](https://github.com/NeuroStat/PaperStudyCharCBMA/tree/master/Analyses/IntermediateResults).
 
 #### Descriptive results
 [DescriptiveResults.R](https://github.com/NeuroStat/PaperStudyCharCBMA/blob/master/Analyses/DescriptiveResults.R) contains the code to get the descriptive results (table 2).
@@ -34,5 +34,5 @@ The number of folds, K and the sample size in the test condition is listed in th
 
 #### Results for appendix
 
-Figures for the appendix are obtained in the [ProcesRawData.R]() file in the IntermediateResults folder.
+Figures for the appendix are obtained in the [ProcesRawData.R](https://github.com/NeuroStat/PaperStudyCharCBMA/blob/master/Analyses/IntermediateResults/ProcesRawData.R) file itself in the IntermediateResults folder.
 This is because these figures are directly calculated using the raw results (and I am too lazy to change them to using the intermediate results).
